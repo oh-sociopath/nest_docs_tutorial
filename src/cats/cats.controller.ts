@@ -23,7 +23,6 @@ export class CatsController {
 
   @Get()
   async findAll(@Query() query: ListAllEntities): Promise<Cat[]> {
-    console.log('log: query: ', query);
     return this.catsService.findAll();
   }
 
