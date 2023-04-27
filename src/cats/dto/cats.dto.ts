@@ -1,4 +1,5 @@
 export class CreateCatDto {
+  id: number;
   name: string;
   birthdate: Date;
   owner: string;
