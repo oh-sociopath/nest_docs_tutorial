@@ -7,12 +7,15 @@ import {
   Post,
   Put,
   Query,
+  UseFilters,
 } from '@nestjs/common';
 import { CreateCatDto, ListAllEntities, UpdateCatDto } from './dto/cats.dto';
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
+import { HttpExceptionFilter } from '../httpExceptionFilter';
 
 @Controller('cats')
+@UseFilters(new HttpExceptionFilter())
 export class CatsController {
   constructor(private catsService: CatsService) {}
   @Post()
@@ -28,7 +31,7 @@ export class CatsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return `This action returns a #${id} cat`;
+    return this.catsService.findOne(id);
   }
 
   @Put(':id')
