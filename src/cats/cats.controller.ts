@@ -7,12 +7,15 @@ import {
   Post,
   Put,
   Query,
+  UseFilters,
 } from '@nestjs/common';
 import { CreateCatDto, ListAllEntities, UpdateCatDto } from './dto/cats.dto';
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
+import { HttpExceptionFilter } from '../httpExceptionFilter';
 
 @Controller('cats')
+@UseFilters(new HttpExceptionFilter())
 export class CatsController {
   constructor(private catsService: CatsService) {}
   @Post()

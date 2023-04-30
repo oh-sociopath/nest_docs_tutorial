@@ -14,8 +14,8 @@ export class CatsService {
   }
 
   findOne(id): Cat {
-    const requiredCat = this.cats.find(cat => cat.id === id);
-    console.log(`log: requiredCat:`, requiredCat);
+    const requiredCat = this.cats.find(cat => cat.id === +id);
+
     if(!requiredCat) {
       throw new HttpException('Not found', HttpStatus.NOT_FOUND)
     }
