@@ -11,10 +11,11 @@ import {
   UseFilters,
   UsePipes,
 } from '@nestjs/common';
-import { CreateCatDto, ListAllEntities, UpdateCatDto } from './dto/cats.dto';
+import { CreateCatDto, createCatSchema, ListAllEntities, UpdateCatDto } from './dto/cats.dto';
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
 import { HttpExceptionFilter } from '../httpExceptionFilter';
+import { JoiValidationPipe } from '../pipes/JoiValidationPipe';
 import { CustomValidationPipe } from '../pipes/customValidation.pipe';
 
 @Controller('cats')
@@ -22,7 +23,8 @@ import { CustomValidationPipe } from '../pipes/customValidation.pipe';
 export class CatsController {
   constructor(private catsService: CatsService) {}
   @Post()
-  @UsePipes(new CustomValidationPipe())
+  @UsePipes(new JoiValidationPipe(createCatSchema))
+  // @UsePipes(new CustomValidationPipe())
   create(@Body() createCatDto: CreateCatDto) {
     console.log('log: createCatDto:', createCatDto);
     return this.catsService.create(createCatDto);
@@ -34,8 +36,8 @@ export class CatsController {
   }
 
   @Get(':id')
-  @UsePipes(ParseIntPipe)
-  findOne(@Param('id') id: number) {
+  // @UsePipes(ParseIntPipe)
+  findOne(@Param('id', new ParseIntPipe()) id: number) {
     return this.catsService.findOne(id);
   }
 
