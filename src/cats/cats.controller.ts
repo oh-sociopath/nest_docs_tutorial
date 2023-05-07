@@ -8,7 +8,7 @@ import {
   Post,
   Put,
   Query,
-  UseFilters,
+  UseFilters, UseGuards,
   UsePipes,
 } from '@nestjs/common';
 import { CreateCatDto, createCatSchema, ListAllEntities, UpdateCatDto } from './dto/cats.dto';
@@ -17,16 +17,19 @@ import { Cat } from './interfaces/cat.interface';
 import { HttpExceptionFilter } from '../httpExceptionFilter';
 import { JoiValidationPipe } from '../pipes/JoiValidationPipe';
 import { CustomValidationPipe } from '../pipes/customValidation.pipe';
+import { RolesGuard } from '../guards/roles.guard';
+import { Roles } from './decorators/roles.decorator';
 
 @Controller('cats')
 @UseFilters(new HttpExceptionFilter())
+@UseGuards(RolesGuard)
 export class CatsController {
   constructor(private catsService: CatsService) {}
   @Post()
   @UsePipes(new JoiValidationPipe(createCatSchema))
   // @UsePipes(new CustomValidationPipe())
+  @Roles('bls')
   create(@Body() createCatDto: CreateCatDto) {
-    console.log('log: createCatDto:', createCatDto);
     return this.catsService.create(createCatDto);
   }
 

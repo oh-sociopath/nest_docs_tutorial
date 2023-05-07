@@ -2,10 +2,10 @@ import { ArgumentMetadata, BadRequestException, PipeTransform } from '@nestjs/co
 import { ObjectSchema } from 'joi';
 
 export class JoiValidationPipe implements PipeTransform {
-    constructor(private schema: ObjectSchema) {}
+    constructor(private schema: ObjectSchema) {
+    }
 
     transform(value: any, metadata: ArgumentMetadata): any {
-        console.log('log: value:', value);
         const addedBirthdate = {...value, birthdate: new Date()}
         const { error } = this.schema.validate(addedBirthdate);
         if(error) {
