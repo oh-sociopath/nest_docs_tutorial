@@ -8,21 +8,24 @@ import {
   Post,
   Put,
   Query,
-  UseFilters, UseGuards,
+  UseFilters, UseGuards, UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { CreateCatDto, createCatSchema, ListAllEntities, UpdateCatDto } from './dto/cats.dto';
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
 import { HttpExceptionFilter } from '../httpExceptionFilter';
-import { JoiValidationPipe } from '../pipes/JoiValidationPipe';
-import { CustomValidationPipe } from '../pipes/customValidation.pipe';
-import { RolesGuard } from '../guards/roles.guard';
+import { JoiValidationPipe } from './pipes/JoiValidationPipe';
+import { CustomValidationPipe } from './pipes/customValidation.pipe';
+import { RolesGuard } from './guards/roles.guard';
 import { Roles } from './decorators/roles.decorator';
+import { LoggingInterceptor } from './interceptor/logging.interceptor';
+import { TransformInterceptor } from './interceptor/transform.interceptor';
 
 @Controller('cats')
 @UseFilters(new HttpExceptionFilter())
 @UseGuards(RolesGuard)
+@UseInterceptors(LoggingInterceptor)
 export class CatsController {
   constructor(private catsService: CatsService) {}
   @Post()
@@ -34,6 +37,7 @@ export class CatsController {
   }
 
   @Get()
+  @UseInterceptors(TransformInterceptor)
   async findAll(@Query() query: ListAllEntities): Promise<Cat[]> {
     return this.catsService.findAll();
   }
