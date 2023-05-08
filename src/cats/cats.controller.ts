@@ -28,7 +28,7 @@ export class CatsController {
   @Post()
   @UsePipes(new JoiValidationPipe(createCatSchema))
   // @UsePipes(new CustomValidationPipe())
-  @Roles('bls')
+  @Roles('admin')
   create(@Body() createCatDto: CreateCatDto) {
     return this.catsService.create(createCatDto);
   }
